@@ -43,6 +43,54 @@
         }
     }
 
+    // Sincronización automática con servidor SQLite nativo (mesh.db)
+    async function sincronizarConServidorSQLite() {
+        try {
+            const res = await fetch("/api/usuarios");
+            if (!res.ok) return;
+            const usuariosSQLite = await res.json();
+            const locales = obtenerEstudiantes();
+
+            if (Array.isArray(usuariosSQLite) && usuariosSQLite.length > 0) {
+                const faltantes = locales.filter(l => 
+                    l.correo && !usuariosSQLite.some(sq => sq.correo.toLowerCase() === l.correo.toLowerCase())
+                );
+
+                if (faltantes.length > 0) {
+                    await fetch("/api/sync", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(faltantes)
+                    });
+                    const resFinal = await fetch("/api/usuarios");
+                    if (resFinal.ok) {
+                        const listaFinal = await resFinal.json();
+                        guardarEstudiantes(listaFinal);
+                        window.dispatchEvent(new CustomEvent("mesh_usuarios_actualizados"));
+                        return;
+                    }
+                }
+
+                guardarEstudiantes(usuariosSQLite);
+                window.dispatchEvent(new CustomEvent("mesh_usuarios_actualizados"));
+            } else if (locales.length > 0) {
+                const syncRes = await fetch("/api/sync", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(locales)
+                });
+                if (syncRes.ok) {
+                    const data = await syncRes.json();
+                    if (data.usuarios) {
+                        guardarEstudiantes(data.usuarios);
+                    }
+                }
+            }
+        } catch (err) {}
+    }
+
+    sincronizarConServidorSQLite();
+
     function obtenerEstudianteActivo() {
         try {
             const raw = localStorage.getItem(KEY_SESION);
@@ -568,6 +616,13 @@
         guardarEstudiantes(estudiantes);
         establecerSesion(nuevoEstudiante);
 
+        // Guardar en servidor SQLite físico (mesh.db)
+        fetch("/api/registro", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(nuevoEstudiante)
+        }).catch(() => {});
+
         // Guardar en Base de Datos SQLite (mesh.db) vía WebAssembly
         if (window.MeshSQLite && typeof window.MeshSQLite.guardarUsuario === "function") {
             window.MeshSQLite.guardarUsuario(nuevoEstudiante);
@@ -684,6 +739,12 @@
         estudiantes[index].password = nueva;
         guardarEstudiantes(estudiantes);
 
+        fetch("/api/cambiar-password", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ correo, nuevaPassword: nueva })
+        }).catch(() => {});
+
         if (window.MeshSQLite && typeof window.MeshSQLite.actualizarPassword === "function") {
             window.MeshSQLite.actualizarPassword(correo, nueva);
         }
@@ -739,6 +800,25 @@
 
         estudiantes[index].historialQuizzes.push(registro);
         guardarEstudiantes(estudiantes);
+
+        // Guardar en servidor SQLite físico (mesh.db)
+        fetch("/api/quiz-resultado", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                id: registro.id,
+                usuario_id: estudiantes[index].id,
+                correo: estudiantes[index].correo,
+                tipo: tipo,
+                titulo: titulos[tipo] || tipo,
+                puntos: puntos,
+                fallos: registro.fallos,
+                total: total,
+                porcentaje: porcentaje,
+                detalles: detalles || [],
+                fecha: registro.fecha
+            })
+        }).catch(() => {});
 
         // Guardar resultado del intento en SQLite (mesh.db)
         if (window.MeshSQLite && typeof window.MeshSQLite.guardarIntentoQuiz === "function") {

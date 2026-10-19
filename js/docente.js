@@ -1012,6 +1012,13 @@
             window.dispatchEvent(new CustomEvent("mesh_usuarios_actualizados", { detail: nuevoEstudiante }));
         } catch (err) {}
 
+        // Guardar en servidor SQLite físico (mesh.db)
+        fetch("/api/registro", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(nuevoEstudiante)
+        }).catch(() => {});
+
         // Guardar en Base de Datos SQLite (mesh.db) vía WebAssembly
         if (window.MeshSQLite && typeof window.MeshSQLite.guardarUsuario === "function") {
             window.MeshSQLite.guardarUsuario(nuevoEstudiante);
