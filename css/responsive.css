@@ -1,0 +1,452 @@
+@media (max-width: 900px) {
+
+    header {
+
+        padding: 0 30px;
+
+    }
+
+    nav {
+
+        gap: 15px;
+
+    }
+
+    nav a {
+
+        font-size: 14px;
+
+    }
+
+
+    .hero {
+
+        padding:
+            130px 5% 60px;
+
+    }
+
+    .heroTexto h1 {
+
+        font-size: 48px;
+
+    }
+
+    .cards {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+    }
+
+}
+
+@media (max-width: 650px) {
+
+    header {
+        height: 70px;
+        padding: 0 25px;
+        flex-direction: row;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    nav {
+        position: absolute;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        background: rgba(4, 13, 28, 0.97);
+        backdrop-filter: blur(15px);
+        flex-direction: column;
+        align-items: center;
+        padding: 20px 0;
+        gap: 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        display: none;
+    }
+
+    nav.active {
+        display: flex;
+    }
+
+
+    .hero {
+
+        min-height: auto;
+
+        flex-direction: column;
+
+        text-align: center;
+
+        padding:
+            170px 25px 60px;
+
+    }
+
+
+    .heroTexto {
+
+        width: 100%;
+
+    }
+
+
+    .heroTexto h1 {
+
+        font-size: 42px;
+
+    }
+
+
+    .heroTexto p {
+
+        font-size: 19px;
+
+    }
+
+
+    .heroImagen {
+
+        width: 100%;
+
+    }
+
+
+    .heroImagen img {
+
+        max-width: 350px;
+
+    }
+
+
+    .cards {
+
+        grid-template-columns: 1fr;
+
+        padding:
+            20px 25px 70px;
+
+    }
+
+}
+
+@media (max-width: 900px) {
+
+    .temas-redes,
+    .riesgos {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+
+    }
+
+}
+
+
+@media (max-width: 650px) {
+
+    .temas-redes,
+    .riesgos {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .redes,
+    .seguridad {
+
+        padding:
+            160px 25px 70px;
+
+    }
+
+
+    .redes-intro h1,
+    .seguridad-intro h1 {
+
+        font-size: 42px;
+
+    }
+
+
+    .redes-intro p,
+    .seguridad-intro p {
+
+        font-size: 17px;
+
+    }
+
+
+    .redes-detalle h1,
+    .seguridad-detalle h1 {
+
+        font-size: 38px;
+
+    }
+
+}
+
+@media (max-width: 900px) {
+
+    .categorias-aprende {
+
+        grid-template-columns: 1fr;
+
+        max-width: 650px;
+
+    }
+
+}
+
+
+@media (max-width: 650px) {
+
+    .aprende {
+
+        padding:
+            160px 25px 70px;
+
+    }
+
+
+    .aprende-intro h1 {
+
+        font-size: 42px;
+
+    }
+
+
+    .aprende-intro p {
+
+        font-size: 17px;
+
+    }
+
+
+    .categoria-aprende {
+
+        padding: 28px;
+
+    }
+
+
+    .leccion h1 {
+
+        font-size: 38px;
+
+    }
+
+
+    .leccion-contenido {
+
+        padding: 25px;
+
+    }
+
+}
+/* =================================
+   ACTIVIDADES EN CELULAR
+================================= */
+
+@media (max-width: 900px) {
+
+    .categorias-actividades {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+        gap: 28px;
+
+    }
+
+}
+
+
+@media (max-width: 650px) {
+
+    .actividades {
+
+        padding:
+            160px 25px 70px;
+
+    }
+
+
+    .categorias-actividades {
+
+        grid-template-columns: 1fr;
+        gap: 24px;
+
+    }
+
+
+    .actividades-intro h1 {
+
+        font-size: 42px;
+
+    }
+
+
+    .actividades-intro p {
+
+        font-size: 17px;
+
+    }
+
+
+    .quiz h1 {
+
+        font-size: 36px;
+
+    }
+
+
+    .pregunta {
+
+        padding: 22px;
+
+    }
+
+
+    .quiz-botones {
+
+        flex-direction: column;
+
+    }
+
+
+    .quiz-botones button {
+
+        width: 100%;
+
+    }
+
+}
+@media (max-width: 900px) {
+    .riesgos, #contenido-seguridad {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .cards-grid-presentacion {
+        grid-template-columns: 1fr;
+    }
+
+    .ruta-pasos-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .hero {
+        flex-direction: column-reverse;
+        text-align: center;
+        gap: 35px;
+        padding-top: 130px;
+    }
+
+    .heroTexto {
+        width: 100%;
+    }
+
+    .heroTexto p {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .hero-botones {
+        justify-content: center;
+    }
+
+    .hero-stats {
+        justify-content: center;
+    }
+
+    .heroImagen {
+        width: 100%;
+    }
+
+    .hero-logo-box {
+        width: 360px;
+        height: 360px;
+    }
+
+    .hero-logo-img {
+        width: 320px;
+        height: 320px;
+    }
+
+    .hero-badge.badge-1 {
+        right: -5px;
+    }
+
+    .hero-badge.badge-2 {
+        left: -10px;
+    }
+
+    .hero-badge.badge-3 {
+        right: 10px;
+    }
+}
+
+@media (max-width: 650px) {
+    .riesgos, #contenido-seguridad, .colores-cable, .temas-redes {
+        grid-template-columns: 1fr;
+    }
+    .riesgo, .tarjeta-seguridad, .tema-red, .card-modulo {
+        padding: 24px 20px;
+    }
+
+    .ruta-pasos-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-stats {
+        flex-direction: column;
+        gap: 16px;
+        align-items: center;
+        text-align: center;
+    }
+
+    .hero-badge {
+        display: none;
+    }
+
+    .hero-botones {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .btn-hero-primario,
+    .btn-hero-secundario {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .hero-logo-box {
+        width: 280px;
+        height: 280px;
+    }
+
+    .hero-logo-img {
+        width: 250px;
+        height: 250px;
+    }
+
+    .inicio-cta {
+        padding: 34px 20px;
+    }
+
+    .inicio-cta-botones {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .btn-cta-primario,
+    .btn-cta-secundario {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+

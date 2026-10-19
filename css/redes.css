@@ -1,0 +1,326 @@
+.redes {
+
+    min-height: 100vh;
+
+    padding: 140px 8% 80px;
+
+}
+
+.redes-intro {
+
+    max-width: 850px;
+
+    margin: 0 auto 60px;
+
+    text-align: center;
+
+}
+
+.redes-intro h1 {
+
+    font-size: clamp(40px, 5vw, 65px);
+
+    margin-bottom: 20px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #ffffff,
+            #6eeeea
+        );
+
+    -webkit-background-clip: text;
+
+    -webkit-text-fill-color: transparent;
+
+}
+
+.redes-intro p {
+
+    color: #c4dddd;
+
+    font-size: 19px;
+
+    line-height: 1.7;
+
+}
+
+.temas-redes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+    gap: 36px 32px;
+    max-width: 1250px;
+    margin: 0 auto 60px;
+}
+
+.tema-red {
+    padding: 38px 32px 34px;
+    min-height: 380px;
+    border-radius: 24px;
+    background: rgba(8, 26, 55, 0.72);
+    border: 1.5px solid rgba(0, 229, 229, 0.22);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35), 0 0 15px rgba(0, 139, 139, 0.1);
+    transition: all 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+}
+
+.tema-red::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #008B8B, #00e5e5, #6eeeea);
+    opacity: 0.6;
+    transition: opacity 0.3s ease;
+}
+
+.tema-red:hover {
+    transform: translateY(-8px);
+    border-color: #00e5e5;
+    background: rgba(0, 139, 139, 0.26);
+    box-shadow: 0 22px 50px rgba(0, 0, 0, 0.45), 0 0 30px rgba(0, 229, 229, 0.3);
+}
+
+.tema-red:hover::before {
+    opacity: 1;
+}
+
+.tema-red > div {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.tema-icono {
+    width: 68px;
+    height: 68px;
+    border-radius: 20px;
+    background: rgba(0, 139, 139, 0.25);
+    border: 1.5px solid rgba(0, 229, 229, 0.4);
+    color: #00e5e5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tema-red:hover .tema-icono {
+    transform: scale(1.1) rotate(4deg);
+    box-shadow: 0 0 25px rgba(0, 229, 229, 0.45);
+}
+
+.tema-red h2 {
+    font-size: 22px;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 14px;
+    line-height: 1.35;
+    letter-spacing: 0.3px;
+}
+
+.tema-red p {
+    color: #cbd5e1;
+    font-size: 15px;
+    line-height: 1.65;
+    margin-bottom: 24px;
+    flex-grow: 1;
+}
+
+.tema-red button {
+    margin-top: auto;
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 15px 22px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #008B8B, #00caca);
+    border: 1px solid rgba(0, 229, 229, 0.35);
+    color: #ffffff;
+    font-weight: 700;
+    font-family: inherit;
+    font-size: 15.5px;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(0, 139, 139, 0.35);
+    transition: all 0.25s ease;
+}
+
+.tema-red button:hover {
+    background: linear-gradient(135deg, #009e9e, #00e5e5);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(0, 229, 229, 0.45);
+}
+
+.redes-detalle {
+    max-width: 900px;
+    margin: auto;
+    text-align: center;
+}
+
+.redes-detalle h1 {
+    font-size: clamp(34px, 4vw, 48px);
+    color: #72eeee;
+    margin-bottom: 25px;
+    line-height: 1.2;
+}
+
+.redes-detalle p {
+    color: #d0dddd;
+    font-size: 18px;
+    line-height: 1.8;
+    margin-bottom: 30px;
+}
+
+.redes-detalle .contenido-info {
+    text-align: left;
+    padding: 40px 36px;
+    border-radius: 24px;
+    background: rgba(8, 26, 55, 0.72);
+    border: 1.5px solid rgba(0, 229, 229, 0.22);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+}
+
+.redes-detalle .contenido-info titulo,
+.redes-detalle .contenido-info h3 {
+    display: block;
+    font-size: 22px;
+    font-weight: 700;
+    color: #72eeee;
+    margin-top: 25px;
+    margin-bottom: 12px;
+    letter-spacing: 0.5px;
+}
+
+.redes-detalle .contenido-info titulo:first-child,
+.redes-detalle .contenido-info h3:first-child {
+    margin-top: 0;
+}
+
+.redes-detalle .contenido-info p {
+    color: #d0dddd;
+    font-size: 17px;
+    line-height: 1.75;
+    margin-bottom: 18px;
+}
+
+.redes-detalle .contenido-info ul {
+    margin: 10px 0 20px 24px;
+    color: #d0dddd;
+    font-size: 17px;
+    line-height: 1.75;
+}
+
+.redes-detalle .contenido-info li {
+    margin-bottom: 10px;
+}
+
+.redes-detalle .contenido-info li ul {
+    margin-top: 8px;
+    margin-bottom: 12px;
+    margin-left: 20px;
+}
+
+.redes-detalle .contenido-info ul.lista-ejemplos {
+    list-style: none;
+    margin: 15px 0 25px 0;
+    padding: 0;
+}
+
+.redes-detalle .contenido-info ul.lista-ejemplos li {
+    background: rgba(0, 139, 139, 0.15);
+    border-left: 4px solid #00caca;
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 14px;
+    font-size: 16.5px;
+    line-height: 1.7;
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.redes-detalle .contenido-info ul.lista-ejemplos li:hover {
+    background: rgba(0, 180, 180, 0.22);
+    transform: translateX(4px);
+}
+
+.redes-detalle .contenido-info ul.lista-ejemplos li ul {
+    margin: 10px 0 6px 20px;
+    list-style: disc;
+}
+
+.redes-detalle .contenido-info ul.lista-ejemplos li ul li {
+    background: none;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    margin-bottom: 6px;
+    transform: none;
+}
+
+.redes-detalle .contenido-info strong {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.redes-detalle .contenido-info code {
+    background: rgba(0, 229, 229, 0.15);
+    color: #6eeeea;
+    padding: 2px 7px;
+    border-radius: 5px;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 0.92em;
+}
+
+.redes-detalle button {
+
+    padding: 12px 22px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #008B8B;
+
+    color: white;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+}
+
+
+.video-redes {
+    width: 100%;
+    max-width: 850px;
+    margin: 35px auto;
+    text-align: center;
+}
+
+.video-redes h2 {
+    color: #00e5e5;
+    font-size: 26px;
+    margin-bottom: 20px;
+}
+
+.video-redes video {
+    display: block;
+    width: 100%;
+    max-height: 480px;
+    aspect-ratio: 16 / 9;
+    object-fit: contain;
+    background: #000;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}

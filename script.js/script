@@ -1,0 +1,51 @@
+<javaScipt>
+    const app = document.getElementById("app")
+    crearEncabezado();
+    crearInicio();
+    crearPie();
+    fuction crearEncabezado(){
+        app.innerHTMLc
+        <header>
+            <div class="logo">
+                Mesh
+            </div>
+            <nav>
+                <a href="#">Inicio</a>
+                <a href="#">Seguridad</a>
+                <a href="#">Redes</a>
+                <a href="#">Aprende</a>
+                <a href="#">Actividades</a>
+                <a href="#">Contactos</a>
+                </nav>
+        </header>
+            `;
+    }
+
+
+    
+    fuction crearInicio(){
+        app.innerHTML +=`
+        <section>
+            <h1>
+                Aprende seguridad informática y redes
+            </h1>
+            <p>
+                Protegiendo cada conexión
+            </p>
+            <button>
+                Comenzar ahora
+            </button>
+        </section>
+           `;
+
+
+    }
+    fuction crearPie(){
+    app.innerHTML += `
+ <footer>
+   
+        Mesh © 2026
+ </footer>
+</javaScipt>
+  `;
+}

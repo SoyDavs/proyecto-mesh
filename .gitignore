@@ -1,0 +1,8 @@
+# Logs & System
+node_modules/
+__pycache__/
+*.pyc
+.system_generated/
+.tempmediaStorage/
+.DS_Store
+Thumbs.db

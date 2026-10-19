@@ -1,0 +1,157 @@
+/* =======================================================
+   ESTILOS GENERALES & SISTEMA DE DISEÑO (MESH)
+   Paleta: #081A37 (Azul Profundo), #008B8B (Teal), #00e5e5 (Cyan)
+   ======================================================= */
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: linear-gradient(135deg, #081A37 0%, #0a2544 50%, #006060 100%);
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: #ffffff;
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+#app {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main#contenido {
+    flex: 1 0 auto;
+    width: 100%;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.25s ease, opacity 0.25s ease;
+}
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    transition: all 0.25s ease;
+}
+
+/* =======================================================
+   UTILIDADES PARA REACT-ICONS (VECTOR SVG)
+   ======================================================= */
+
+.react-icon {
+    display: inline-block;
+    vertical-align: middle;
+    stroke: currentColor;
+    fill: none;
+    flex-shrink: 0;
+    transition: transform 0.2s ease, stroke 0.2s ease;
+}
+
+.color-exito {
+    color: #34d399 !important;
+}
+
+.color-error {
+    color: #f87171 !important;
+}
+
+.imagen-circular {
+    border-radius: 50%;
+    object-fit: cover;
+    aspect-ratio: 1 / 1;
+}
+
+/* SCROLLBAR PERSONALIZADO */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #081A37;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #008B8B;
+    border-radius: 5px;
+    border: 2px solid #081A37;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #00e5e5;
+}
+
+/* SELECCIÓN DE TEXTO */
+::selection {
+    background: rgba(0, 229, 229, 0.35);
+    color: #ffffff;
+}
+
+/* BOTONES GLOBALES DE NAVEGACIÓN (VOLVER Y ACCIONES) */
+.btn-volver {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(0, 229, 229, 0.35);
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 700;
+    backdrop-filter: blur(10px);
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.btn-volver:hover {
+    background: rgba(0, 139, 139, 0.25);
+    border-color: #00e5e5;
+    color: #6eeeea;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 229, 229, 0.25);
+}
+
+.btn-accion-siguiente {
+    background: linear-gradient(135deg, #008B8B, #00aaaa) !important;
+    border-color: rgba(0, 229, 229, 0.5) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 15px rgba(0, 139, 139, 0.4) !important;
+}
+
+.btn-accion-siguiente:hover {
+    background: linear-gradient(135deg, #009e9e, #00caca) !important;
+    box-shadow: 0 8px 25px rgba(0, 229, 229, 0.45) !important;
+}
+
+.leccion-acciones,
+.seguridad-acciones-volver {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 35px;
+}
+
