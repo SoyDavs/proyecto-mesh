@@ -1,0 +1,12 @@
+{
+  "name": "red-mesh-interactiva",
+  "version": "1.0.0",
+  "description": "Plataforma educativa MESH interactiva de Seguridad Informática y Redes",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}
