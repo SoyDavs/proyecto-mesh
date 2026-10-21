@@ -43,50 +43,92 @@
         }
     }
 
-    // Sincronización automática con servidor SQLite nativo (mesh.db)
-    async function sincronizarConServidorSQLite() {
+    // Sincronización inteligente bidireccional con servidor SQLite nativo (mesh.db)
+    async function sincronizarConServidorSQLite(forzar = false) {
         try {
             const res = await fetch("/api/usuarios");
-            if (!res.ok) return;
+            if (!res.ok) return { success: false, error: "Servidor no responde" };
             const usuariosSQLite = await res.json();
+            if (!Array.isArray(usuariosSQLite)) return { success: false, error: "Respuesta inválida" };
+
             const locales = obtenerEstudiantes();
+            let hayCambiosLocalesParaSubir = false;
 
-            if (Array.isArray(usuariosSQLite) && usuariosSQLite.length > 0) {
-                const faltantes = locales.filter(l => 
-                    l.correo && !usuariosSQLite.some(sq => sq.correo.toLowerCase() === l.correo.toLowerCase())
-                );
+            // Mapa para combinar usuarios sin duplicar y sin perder información
+            const mapaUsuarios = new Map();
 
-                if (faltantes.length > 0) {
-                    await fetch("/api/sync", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(faltantes)
+            // 1. Cargar usuarios del servidor SQLite
+            usuariosSQLite.forEach(u => {
+                if (u && u.correo) {
+                    mapaUsuarios.set(u.correo.toLowerCase().trim(), {
+                        ...u,
+                        historialQuizzes: Array.isArray(u.historialQuizzes) ? [...u.historialQuizzes] : []
                     });
-                    const resFinal = await fetch("/api/usuarios");
-                    if (resFinal.ok) {
-                        const listaFinal = await resFinal.json();
-                        guardarEstudiantes(listaFinal);
-                        window.dispatchEvent(new CustomEvent("mesh_usuarios_actualizados"));
-                        return;
-                    }
                 }
+            });
 
-                guardarEstudiantes(usuariosSQLite);
-                window.dispatchEvent(new CustomEvent("mesh_usuarios_actualizados"));
-            } else if (locales.length > 0) {
+            // 2. Fusionar con registros locales (ej: realizados en el celular)
+            locales.forEach(loc => {
+                if (!loc || !loc.correo) return;
+                const email = loc.correo.toLowerCase().trim();
+
+                if (!mapaUsuarios.has(email)) {
+                    // Estudiante nuevo que estaba solo en este dispositivo
+                    mapaUsuarios.set(email, loc);
+                    hayCambiosLocalesParaSubir = true;
+                } else {
+                    // El estudiante existe en ambos: fusionar sus intentos de cuestionarios
+                    const uServidor = mapaUsuarios.get(email);
+                    const quizzesServidor = Array.isArray(uServidor.historialQuizzes) ? uServidor.historialQuizzes : [];
+                    const quizzesLocales = Array.isArray(loc.historialQuizzes) ? loc.historialQuizzes : [];
+
+                    quizzesLocales.forEach(qLoc => {
+                        if (!qLoc) return;
+                        const yaExiste = quizzesServidor.some(qS => 
+                            (qLoc.id && qS.id && qLoc.id === qS.id) ||
+                            (qLoc.tipo === qS.tipo && qLoc.fecha && qS.fecha && qLoc.fecha === qS.fecha)
+                        );
+
+                        if (!yaExiste) {
+                            quizzesServidor.push(qLoc);
+                            hayCambiosLocalesParaSubir = true;
+                        }
+                    });
+
+                    uServidor.historialQuizzes = quizzesServidor;
+                }
+            });
+
+            const listaFusionada = Array.from(mapaUsuarios.values());
+
+            // 3. Si hay intentos o usuarios locales que el servidor aún no tiene, subirlos en lote
+            if (hayCambiosLocalesParaSubir || forzar) {
+                console.log("[Sync] Subiendo registros locales a la base de datos de Render...");
                 const syncRes = await fetch("/api/sync", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(locales)
+                    body: JSON.stringify(listaFusionada)
                 });
+
                 if (syncRes.ok) {
                     const data = await syncRes.json();
-                    if (data.usuarios) {
+                    if (Array.isArray(data.usuarios)) {
                         guardarEstudiantes(data.usuarios);
+                        window.dispatchEvent(new CustomEvent("mesh_usuarios_actualizados"));
+                        console.log(`[Sync] Base de datos sincronizada: ${data.usuarios.length} usuarios.`);
+                        return { success: true, total: data.usuarios.length, subidos: true };
                     }
                 }
             }
-        } catch (err) {}
+
+            // Si el servidor ya tenía los datos o no hubo cambios locales, guardar lista combinada
+            guardarEstudiantes(listaFusionada);
+            window.dispatchEvent(new CustomEvent("mesh_usuarios_actualizados"));
+            return { success: true, total: listaFusionada.length, subidos: false };
+        } catch (err) {
+            console.warn("[Sync] Servidor offline o sincronización en espera:", err);
+            return { success: false, error: err.message };
+        }
     }
 
     sincronizarConServidorSQLite();
@@ -519,16 +561,36 @@
         `;
     }
 
-    function procesarLogin(e) {
+    async function procesarLogin(e) {
         e.preventDefault();
         const correo = document.getElementById("login-correo").value.trim().toLowerCase();
-        const pass = document.getElementById("login-password").value;
+        const pass = document.getElementById("login-password").value.trim();
 
-        const estudiantes = obtenerEstudiantes();
-        const estudiante = estudiantes.find(u => u.correo.toLowerCase() === correo && u.password === pass);
+        let estudiantes = obtenerEstudiantes();
+        let estudiante = estudiantes.find(u => u.correo && u.correo.toLowerCase() === correo && String(u.password).trim() === pass);
+
+        // Si no se encuentra en local, consultar de inmediato al servidor SQLite de Render
+        if (!estudiante) {
+            try {
+                const res = await fetch("/api/usuarios");
+                if (res.ok) {
+                    const usuariosServer = await res.json();
+                    if (Array.isArray(usuariosServer)) {
+                        guardarEstudiantes(usuariosServer);
+                        estudiantes = usuariosServer;
+                        estudiante = estudiantes.find(u => u.correo && u.correo.toLowerCase() === correo && String(u.password).trim() === pass);
+                    }
+                }
+            } catch (err) {}
+        }
 
         if (!estudiante) {
-            mostrarAlerta("error", "Correo o contraseña incorrectos. Si olvidaste tu clave, utiliza el enlace abajo.");
+            const existeCorreo = estudiantes.find(u => u.correo && u.correo.toLowerCase() === correo);
+            if (existeCorreo) {
+                mostrarAlerta("error", "Contraseña incorrecta. Si la olvidaste, usa '¿Olvidaste tu contraseña?' abajo.");
+            } else {
+                mostrarAlerta("error", "No existe ninguna cuenta registrada con este correo. Por favor ve a 'Registrarse'.");
+            }
             return;
         }
 
@@ -569,7 +631,7 @@
         }
     }
 
-    function procesarRegistro(e) {
+    async function procesarRegistro(e) {
         e.preventDefault();
         const nombreInput = document.getElementById("reg-nombre");
         const nombre = nombreInput ? nombreInput.value.trim() : "";
@@ -581,7 +643,7 @@
         const correo = correoInput ? correoInput.value.trim().toLowerCase() : "";
 
         const passInput = document.getElementById("reg-password");
-        const pass = passInput ? passInput.value : "";
+        const pass = passInput ? passInput.value.trim() : "";
 
         if (!nombre || !correo || !pass) {
             mostrarAlerta("error", "Por favor completa todos los campos requeridos.");
@@ -616,12 +678,14 @@
         guardarEstudiantes(estudiantes);
         establecerSesion(nuevoEstudiante);
 
-        // Guardar en servidor SQLite físico (mesh.db)
-        fetch("/api/registro", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(nuevoEstudiante)
-        }).catch(() => {});
+        // Guardar en servidor SQLite físico (mesh.db) con await para garantizar persistencia
+        try {
+            await fetch("/api/registro", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(nuevoEstudiante)
+            });
+        } catch (err) {}
 
         // Guardar en Base de Datos SQLite (mesh.db) vía WebAssembly
         if (window.MeshSQLite && typeof window.MeshSQLite.guardarUsuario === "function") {
@@ -894,6 +958,7 @@
     window.Auth = {
         obtenerEstudianteActivo,
         obtenerEstudiantes,
+        sincronizarConServidorSQLite,
         cerrarSesion: cerrarSesionEstudiante,
         abrirModal: abrirModalAuth,
         cerrarModal: cerrarModalAuth,
@@ -910,6 +975,7 @@
     // Alias directos para accesibilidad global
     window.obtenerEstudianteActivo = obtenerEstudianteActivo;
     window.obtenerEstudiantes = obtenerEstudiantes;
+    window.sincronizarConServidorSQLite = sincronizarConServidorSQLite;
     window.cerrarSesionEstudiante = cerrarSesionEstudiante;
     window.abrirModalAuth = abrirModalAuth;
     window.guardarResultadoQuizEstudiante = guardarResultadoQuizEstudiante;

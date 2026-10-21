@@ -118,6 +118,11 @@
             return;
         }
 
+        // Disparar sincronización silenciosa con el servidor en segundo plano
+        if (typeof window.Auth !== "undefined" && typeof window.Auth.sincronizarConServidorSQLite === "function") {
+            window.Auth.sincronizarConServidorSQLite();
+        }
+
         // ACCESO AUTORIZADO: DOCENTE CONFIRMADO
         const todosLosUsuarios = typeof obtenerEstudiantes === "function" ? obtenerEstudiantes() : [];
 
@@ -191,7 +196,7 @@
                             <button class="btn-docente-action excel" id="btn-exportar-excel" onclick="Docente.exportarExcelConLogo()" title="Exportar informe oficial de calificaciones a Excel con logo institucional">
                                 ${icon('file-text', 16)} Exportar a Excel
                             </button>
-                            <button class="btn-docente-action" id="btn-refrescar-docente" onclick="Docente.renderizarPanelDocente()" title="Recargar lista de estudiantes">
+                            <button class="btn-docente-action" id="btn-refrescar-docente" onclick="Docente.renderizarPanelDocente()" title="Actualizar datos">
                                 ${icon('refresh', 16)} Actualizar
                             </button>
                             <button class="btn-docente-action" id="btn-volver-actividades" onclick="navegar('actividades')">
@@ -1352,6 +1357,14 @@
         document.body.appendChild(notif);
         setTimeout(() => notif.remove(), 4000);
     }
+
+    // Escuchar actualizaciones del servidor para refrescar la vista automáticamente
+    window.addEventListener("mesh_usuarios_actualizados", () => {
+        const contenido = document.getElementById("contenido-principal");
+        if (contenido && contenido.querySelector(".docente-section")) {
+            renderizarPanelDocente();
+        }
+    });
 
     // Exponer API del módulo Docente
     window.Docente = {

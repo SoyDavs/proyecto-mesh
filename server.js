@@ -323,7 +323,7 @@ const server = http.createServer(async (req, res) => {
                     if (Array.isArray(u.historialQuizzes)) {
                         for (const q of u.historialQuizzes) {
                             if (!q) continue;
-                            const qId = q.id || ("intento_" + Date.now());
+                            const qId = q.id || ("intento_" + Date.now() + "_" + Math.random().toString(36).slice(2, 8));
                             stmtQuiz.run(
                                 qId,
                                 id,
